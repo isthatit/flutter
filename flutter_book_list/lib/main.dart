@@ -9,8 +9,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Book List App',
-      // home: ListScreen(),
-      home: DetailScreen(),
+      home: ListScreen(),
+      // home: DetailScreen(),
     );
   }
 }

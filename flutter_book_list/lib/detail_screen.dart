@@ -1,6 +1,18 @@
 import 'package:flutter/material.dart';
 
 class DetailScreen extends StatelessWidget {
+  final String title;
+  final String subtitle;
+  final String description;
+  final String image;
+
+  DetailScreen({
+    required this.title,
+    required this.subtitle,
+    required this.description,
+    required this.image,
+  });
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -9,8 +21,7 @@ class DetailScreen extends StatelessWidget {
       ),
       body: Column(
         children: [
-          Image.network(
-              'https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FluBzz%2FbtrDgN9C4uV%2FiW0PWcSwI4qAfYonoymFkk%2Fimg.png'),
+          Image.network(image),
           Padding(padding: EdgeInsets.all(3)),
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -25,13 +36,12 @@ class DetailScreen extends StatelessWidget {
                   children: [
                     Container(
                       child: Text(
-                        '패키지 없이 R로 구현하는 심층 강화학습',
+                        title,
                         style: TextStyle(
                             fontSize: 23, fontWeight: FontWeight.bold),
                       ),
                     ),
-                    Text(
-                        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+                    Text(subtitle,
                         style: TextStyle(fontSize: 18, color: Colors.grey))
                   ],
                 ),
@@ -45,9 +55,57 @@ class DetailScreen extends StatelessWidget {
                     color: Colors.red,
                   ),
                 ),
+              ),
+            ],
+          ),
+          Padding(
+            padding: EdgeInsets.all(3),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Column(
+                children: [
+                  Icon(
+                    Icons.call,
+                    color: Colors.blue,
+                  ),
+                  Text(
+                    'Contact',
+                    style: TextStyle(color: Colors.blue),
+                  )
+                ],
+              ),
+              Column(
+                children: [
+                  Icon(
+                    Icons.near_me,
+                    color: Colors.blue,
+                  ),
+                  Text(
+                    'Route',
+                    style: TextStyle(color: Colors.blue),
+                  )
+                ],
+              ),
+              Column(
+                children: [
+                  Icon(
+                    Icons.save,
+                    color: Colors.blue,
+                  ),
+                  Text(
+                    'Save',
+                    style: TextStyle(color: Colors.blue),
+                  )
+                ],
               )
             ],
-          )
+          ),
+          Container(
+              padding: EdgeInsets.all(15),
+              child: Text(description,
+                  style: TextStyle(fontSize: 18, color: Colors.grey))),
         ],
       ),
     );
