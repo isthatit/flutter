@@ -27,7 +27,6 @@ class BookTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("getX area");
     return ListTile(
       title: Text(book.title),
       leading: Image.network(book.image),
