@@ -1,17 +1,71 @@
 import 'package:flutter/material.dart';
 
+enum TimerStatus { running, paused, stopped, resting }
+
 class TimerScreen extends StatefulWidget {
   @override
   _TimerScreenState createState() => _TimerScreenState();
 }
 
 class _TimerScreenState extends State<TimerScreen> {
+  static const WORK_SECONDS = 25;
+  static const REST_SECONDS = 5;
+
+  late TimerStatus _timerStatus;
+  late int _timer;
+  late int _pomodoroCount;
+
+  @override
+  void initState() {
+    super.initState();
+    _timerStatus = TimerStatus.stopped;
+    print(_timerStatus.toString());
+    _timer = WORK_SECONDS;
+    _pomodoroCount = 0;
+  }
+
+  void run() {
+    setState(() {
+      _timerStatus = TimerStatus.running;
+      print("[=>] " + _timerStatus.toString());
+      runTimer();
+    });
+  }
+
+  void rest() {
+    setState(() {
+      _timer = REST_SECONDS;
+      _timerStatus = TimerStatus.resting;
+      print("[=>] " + _timerStatus.toString());
+      runTimer();
+    });
+  }
+
+  void pause() {
+    setState(() {
+      _timerStatus = TimerStatus.paused;
+      print("[=>] " + _timerStatus.toString());
+    });
+  }
+
+  void resume() {
+    run();
+  }
+
+  void stop() {
+    setState(() {
+      _timer = WORK_SECONDS;
+      _timerStatus = TimerStatus.stopped;
+      print("[=>] " + _timerStatus.toString());
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final List<Widget> _runningButtons = [
       ElevatedButton(
         child: Text(
-          1 == 2 ? 'Continue' : 'Pause', // paused ? continue : pause
+          1 == 2 ? 'resume' : 'Pause', // paused ? resume : pause
           style: TextStyle(color: Colors.white, fontSize: 16),
         ),
         style: ElevatedButton.styleFrom(primary: Colors.blue),
