@@ -1,4 +1,19 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:sprintf/sprintf.dart';
+import "package:fluttertoast/fluttertoast.dart";
+
+void showToast(String message) {
+  Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_LONG,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 5,
+      backgroundColor: Colors.grey,
+      textColor: Colors.white,
+      fontSize: 16.0);
+}
 
 enum TimerStatus { running, paused, stopped, resting }
 
@@ -8,8 +23,8 @@ class TimerScreen extends StatefulWidget {
 }
 
 class _TimerScreenState extends State<TimerScreen> {
-  static const WORK_SECONDS = 25;
-  static const REST_SECONDS = 5;
+  static const WORK_SECONDS = 7;
+  static const REST_SECONDS = 3;
 
   late TimerStatus _timerStatus;
   late int _timer;
@@ -60,16 +75,61 @@ class _TimerScreenState extends State<TimerScreen> {
     });
   }
 
+  void runTimer() async {
+    Timer.periodic(Duration(seconds: 1), (Timer t) {
+      switch (_timerStatus) {
+        case TimerStatus.paused:
+          t.cancel();
+          break;
+        case TimerStatus.stopped:
+          t.cancel();
+          break;
+        case TimerStatus.running:
+          if (_timer <= 0) {
+            showToast("complete!");
+            rest();
+          } else {
+            setState(() {
+              _timer -= 1;
+            });
+          }
+          break;
+        case TimerStatus.resting:
+          if (_timer <= 0) {
+            setState(() {
+              _pomodoroCount += 1;
+            });
+            showToast("Today, $_pomodoroCount units pomodoro completed!");
+            t.cancel();
+            stop();
+          } else {
+            setState(() {
+              _timer -= 1;
+            });
+          }
+          break;
+        default:
+          break;
+      }
+    });
+  }
+
+  String secondsToString(int seconds) {
+    return sprintf("%02d:%02d", [seconds ~/ 60, seconds % 60]);
+  }
+
   @override
   Widget build(BuildContext context) {
     final List<Widget> _runningButtons = [
       ElevatedButton(
         child: Text(
-          1 == 2 ? 'resume' : 'Pause', // paused ? resume : pause
+          _timerStatus == TimerStatus.paused
+              ? 'resume'
+              : 'Pause', // paused ? resume : pause
           style: TextStyle(color: Colors.white, fontSize: 16),
         ),
         style: ElevatedButton.styleFrom(primary: Colors.blue),
-        onPressed: () {},
+        onPressed: run,
       ),
       Padding(padding: EdgeInsets.all(20)),
       ElevatedButton(
@@ -78,21 +138,25 @@ class _TimerScreenState extends State<TimerScreen> {
             style: TextStyle(fontSize: 16),
           ),
           style: ElevatedButton.styleFrom(primary: Colors.grey),
-          onPressed: () {}),
+          onPressed: _timerStatus == TimerStatus.paused ? resume : pause),
     ];
     final List<Widget> _stoppedButtons = [
       ElevatedButton(
         child:
             Text('Start', style: TextStyle(color: Colors.white, fontSize: 16)),
         style: ElevatedButton.styleFrom(
-            primary: 1 == 2 ? Colors.green : Colors.blue // break ? green : blue
+            primary: _timerStatus == TimerStatus.resting
+                ? Colors.green
+                : Colors.blue // break ? green : blue
             ),
-        onPressed: () {},
+        onPressed: run,
       ),
     ];
     return Scaffold(
       appBar: AppBar(
         title: Text('Pomodoro Timer'),
+        backgroundColor:
+            _timerStatus == TimerStatus.resting ? Colors.green : Colors.blue,
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -102,7 +166,7 @@ class _TimerScreenState extends State<TimerScreen> {
             width: MediaQuery.of(context).size.width * 0.6,
             child: Center(
               child: Text(
-                '00:00',
+                secondsToString(_timer),
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 48,
@@ -112,15 +176,19 @@ class _TimerScreenState extends State<TimerScreen> {
             ),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color:
-                  1 == 2 ? Colors.green : Colors.blue, // Paused ? green : blue
+              color: _timerStatus == TimerStatus.resting
+                  ? Colors.green
+                  : Colors.blue, // Paused ? green : blue
             ),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: 1 == 2 // break ? !button : button
+            children: _timerStatus ==
+                    TimerStatus.resting // break ? !button : button
                 ? const []
-                : 1 == 2 // puased ? paused button : running button
+                : _timerStatus ==
+                        TimerStatus
+                            .stopped // puased ? paused button : running button
                     ? _stoppedButtons
                     : _runningButtons,
           )
