@@ -1,7 +1,7 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import "package:pomodoro/util.dart";
+import "package:get/get.dart";
 
 enum TimerStatus { running, paused, stopped, resting }
 
