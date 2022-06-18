@@ -23,8 +23,8 @@ class TimerScreen extends StatefulWidget {
 }
 
 class _TimerScreenState extends State<TimerScreen> {
-  static const WORK_SECONDS = 7;
-  static const REST_SECONDS = 3;
+  static const WORK_SECONDS = 4;
+  static const REST_SECONDS = 4;
 
   late TimerStatus _timerStatus;
   late int _timer;
@@ -52,7 +52,6 @@ class _TimerScreenState extends State<TimerScreen> {
       _timer = REST_SECONDS;
       _timerStatus = TimerStatus.resting;
       print("[=>] " + _timerStatus.toString());
-      runTimer();
     });
   }
 
