@@ -6,7 +6,7 @@ import "package:get/get.dart";
 enum TimerStatus { ready, running, paused, stopped, resting }
 
 class TimerScreenGetx extends StatelessWidget {
-  static const WORK_SECONDS = 1000;
+  static const WORK_SECONDS = 3;
   static const REST_SECONDS = 3;
 
   Rx<TimerStatus> _timerStatus = TimerStatus.stopped.obs;
@@ -93,16 +93,16 @@ class TimerScreenGetx extends StatelessWidget {
             style: const TextStyle(color: Colors.white, fontSize: 16),
           ))),
       const Padding(padding: EdgeInsets.all(20)),
-      Obx(() => ElevatedButton(
-            style: ElevatedButton.styleFrom(primary: Colors.grey),
-            onPressed:
-                _timerStatus.value == TimerStatus.paused ? resume : pause,
-            child: const Text(
-              'Abandon',
-              style: TextStyle(fontSize: 16),
-            ),
-          )),
-    ].obs;
+      ElevatedButton(
+        style: ElevatedButton.styleFrom(primary: Colors.grey),
+        onPressed: stop,
+        // _timerStatus.value == TimerStatus.paused ? resume : pause,
+        child: const Text(
+          'Abandon',
+          style: TextStyle(fontSize: 16),
+        ),
+      ),
+    ];
     final List<Widget> _stoppedButtons = [
       ElevatedButton(
           style: ElevatedButton.styleFrom(
@@ -114,7 +114,7 @@ class TimerScreenGetx extends StatelessWidget {
           onPressed: run,
           child: const Text('Start',
               style: TextStyle(color: Colors.white, fontSize: 16))),
-    ].obs;
+    ];
     return Scaffold(
       appBar: AppBar(
         title: Text('Pomodoro Timer'),
